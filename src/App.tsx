@@ -407,7 +407,7 @@ function App() {
                   alt={user?.full_name}
                   className="w-8 h-8 rounded-full cursor-pointer hover:ring-2 hover:ring-indigo-300 transition-all"
                   onClick={() => setShowProfileSettings(true)}
-                  title="Click to change profile picture"
+                  title="Edit profile"
                 />
                 <span className="text-sm font-medium text-gray-700">{user?.full_name}</span>
               </div>
@@ -446,6 +446,13 @@ function App() {
             <div className="bg-white rounded-lg shadow p-6">
               <h4 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h4>
               <div className="space-y-3">
+                <button
+                  onClick={() => setShowProfileSettings(true)}
+                  className="w-full flex items-center space-x-3 p-3 rounded-lg bg-purple-50 text-purple-600 hover:bg-purple-100 transition duration-200"
+                >
+                  <User className="w-5 h-5" />
+                  <span>Edit Profile</span>
+                </button>
                 <button
                   onClick={() => setShowCreatePost(true)}
                   className="w-full flex items-center space-x-3 p-3 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition duration-200"
