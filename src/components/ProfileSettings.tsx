@@ -396,7 +396,7 @@ export const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user, onClose,
               <>
                 <Check className="w-4 h-4" />
                 <span>Save Changes</span>
-              </span>
+              </>
             )}
           </button>
         </div>
