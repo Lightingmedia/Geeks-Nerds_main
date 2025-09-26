@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle, User, Edit3, Share2, Users, BarChart3, ArrowRight, X } from 'lucide-react';
+import { CheckCircle, User, CreditCard as Edit3, Share2, Users, BarChart3, ArrowRight, X } from 'lucide-react';
 
 interface OnboardingFlowProps {
   user: any;
