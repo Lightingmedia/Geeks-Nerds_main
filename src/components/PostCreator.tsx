@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Code, FileText, Image, Folder, FolderOpen, Link } from 'lucide-react';
+import { X, Code, FileText, Image, Folder, FolderOpen, Link, User } from 'lucide-react';
 import { PDFUpload } from './PDFUpload';
 import { ResumeUpload } from './ResumeUpload';
 import { URLEmbedder } from './URLEmbedder';
