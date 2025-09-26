@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MessageCircle, Heart, Reply, Flag, MoreHorizontal, Trash2, Edit3, Check, X } from 'lucide-react';
+import { MessageCircle, Heart, Reply, Flag, MoreHorizontal, Trash2, CreditCard as Edit3, Check, X } from 'lucide-react';
 
 interface Comment {
   id: number;
