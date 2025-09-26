@@ -33,7 +33,9 @@ export interface Post {
   post_type: string;
   code_language?: string;
   document_name?: string;
+  resume_name?: string;
   document_url?: string;
+  resume_url?: string;
   url_preview?: {
     url: string;
     title: string;

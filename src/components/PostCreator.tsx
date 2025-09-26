@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Code, FileText, Image, Folder, FolderOpen, Link } from 'lucide-react';
 import { PDFUpload } from './PDFUpload';
+import { ResumeUpload } from './ResumeUpload';
 import { URLEmbedder } from './URLEmbedder';
 
 interface PostCreatorProps {
@@ -32,6 +33,7 @@ export const PostCreator: React.FC<PostCreatorProps> = ({ onClose, onSubmit, use
   const [content, setContent] = useState('');
   const [codeLanguage, setCodeLanguage] = useState('javascript');
   const [selectedPDF, setSelectedPDF] = useState<PDFFile | null>(null);
+  const [selectedResume, setSelectedResume] = useState<PDFFile | null>(null);
   const [urlPreview, setUrlPreview] = useState<URLPreview | null>(null);
   const [showURLEmbedder, setShowURLEmbedder] = useState(false);
 
@@ -53,6 +55,15 @@ export const PostCreator: React.FC<PostCreatorProps> = ({ onClose, onSubmit, use
     });
   };
 
+  const handleResumeSelect = (file: File) => {
+    const preview = URL.createObjectURL(file);
+    setSelectedResume({
+      file,
+      preview,
+      name: file.name,
+      size: formatFileSize(file.size)
+    });
+  };
   const handleURLEmbed = (preview: URLPreview) => {
     setUrlPreview(preview);
     setShowURLEmbedder(false);
@@ -69,10 +80,17 @@ export const PostCreator: React.FC<PostCreatorProps> = ({ onClose, onSubmit, use
     }
   };
 
+  const handleResumeRemove = () => {
+    if (selectedResume) {
+      URL.revokeObjectURL(selectedResume.preview);
+      setSelectedResume(null);
+    }
+  };
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!content.trim() && !selectedPDF && !urlPreview) return;
+    if (!content.trim() && !selectedPDF && !selectedResume && !urlPreview) return;
 
     const post = {
       id: Date.now(),
@@ -81,7 +99,9 @@ export const PostCreator: React.FC<PostCreatorProps> = ({ onClose, onSubmit, use
       post_type: activeTab,
       code_language: activeTab === 'code' ? codeLanguage : undefined,
       document_name: selectedPDF?.name || undefined,
+      resume_name: selectedResume?.name || undefined,
       document_url: selectedPDF ? URL.createObjectURL(selectedPDF.file) : undefined,
+      resume_url: selectedResume ? URL.createObjectURL(selectedResume.file) : undefined,
       url_preview: urlPreview || undefined,
       created_at: new Date().toISOString(),
       likes_count: 0,
@@ -95,13 +115,14 @@ export const PostCreator: React.FC<PostCreatorProps> = ({ onClose, onSubmit, use
     onSubmit(post);
     setContent('');
     setSelectedPDF(null);
+    setSelectedResume(null);
     onClose();
   };
 
   const tabs = [
     { id: 'text', label: 'Text', icon: FileText, color: 'text-gray-600' },
     { id: 'code', label: 'Code', icon: Code, color: 'text-green-600' },
-    { id: 'photo', label: 'Project', icon: Image, color: 'text-purple-600' },
+    { id: 'resume', label: 'Resume', icon: User, color: 'text-blue-600' },
     { id: 'document', label: 'Document', icon: FolderOpen, color: 'text-orange-600' },
     { id: 'url', label: 'Website', icon: Link, color: 'text-blue-600' }
   ];
@@ -191,6 +212,28 @@ export const PostCreator: React.FC<PostCreatorProps> = ({ onClose, onSubmit, use
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     placeholder="Tell us about this document..."
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+                    rows={3}
+                  />
+                </div>
+              )}
+            </div>
+          ) : activeTab === 'resume' ? (
+            <div className="space-y-4">
+              <ResumeUpload
+                onFileSelect={handleResumeSelect}
+                onRemove={handleResumeRemove}
+                selectedFile={selectedResume}
+              />
+              {selectedResume && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Add a description (optional)
+                  </label>
+                  <textarea
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    placeholder="Tell us about your experience and qualifications..."
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
                     rows={3}
                   />
@@ -309,11 +352,13 @@ export const PostCreator: React.FC<PostCreatorProps> = ({ onClose, onSubmit, use
             </button>
             <button
               type="submit"
-              disabled={!content.trim() && !selectedPDF && !urlPreview}
+              disabled={!content.trim() && !selectedPDF && !selectedResume && !urlPreview}
               className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
             >
               {activeTab === 'document' && selectedPDF 
                 ? 'Share Document' 
+                : activeTab === 'resume' && selectedResume 
+                ? 'Share Resume' 
                 : activeTab === 'url' && urlPreview 
                 ? 'Share Website' 
                 : 'Share Post'}

@@ -32,6 +32,7 @@ interface Post {
   post_type: string;
   code_language?: string;
   document_name?: string;
+  resume_name?: string;
   url_preview?: {
     url: string;
     title: string;
@@ -40,6 +41,7 @@ interface Post {
     siteName?: string;
     favicon?: string;
   };
+  resume_url?: string;
   created_at: string;
   likes_count: number;
   comments_count: number;
@@ -442,6 +444,103 @@ function App() {
                 {user?.location && (
                   <p className="text-sm text-gray-500 mt-2">{user.location}</p>
                 )}
+              ) : post.resume_name ? (
+                <div className="space-y-4">
+                  {post.content && (
+                    <p className="text-gray-900 whitespace-pre-wrap leading-relaxed">{post.content}</p>
+                  )}
+                  <div className="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
+                    {/* Resume Header */}
+                    <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                          <User className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-white">{post.resume_name}</p>
+                          <p className="text-sm text-blue-100">Resume/CV</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => {
+                            if (post.resume_url) {
+                              handleViewResume(post.resume_url, post.full_name);
+                            }
+                          }}
+                          className="p-2 hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors"
+                          title="View resume"
+                        >
+                          <Eye className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => {
+                            if (post.resume_url) {
+                              const link = document.createElement('a');
+                              link.href = post.resume_url;
+                              link.download = post.resume_name;
+                              link.click();
+                            }
+                          }}
+                          className="p-2 hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors"
+                          title="Download"
+                        >
+                          <Upload className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                    
+                    {/* Resume Preview */}
+                    <div className="relative">
+                      {post.resume_url ? (
+                        <iframe
+                          src={post.resume_url}
+                          className="w-full h-64 border-0"
+                          title={`Preview of ${post.resume_name}`}
+                          onError={() => {
+                            console.error('Failed to load resume preview');
+                          }}
+                        />
+                      ) : (
+                        <div className="w-full h-64 bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center">
+                          <div className="text-center">
+                            <User className="w-12 h-12 text-blue-400 mx-auto mb-2" />
+                            <p className="text-blue-600 text-sm mb-2">Resume Preview</p>
+                            <p className="text-xs text-blue-500">Click "View" to open full resume</p>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Document type indicator */}
+                      <div className="absolute top-2 right-2">
+                        <span className="bg-blue-600 text-white text-xs px-2 py-1 rounded">
+                          CV
+                        </span>
+                      </div>
+                    </div>
+                    
+                    {/* Resume info footer */}
+                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-4 py-3 text-sm text-blue-700 flex items-center justify-between">
+                      <p className="flex items-center space-x-2">
+                        <User className="w-4 h-4" />
+                        <span>Professional Resume</span>
+                      </p>
+                      <div className="flex space-x-3">
+                        <button
+                          onClick={() => {
+                            if (post.resume_url) {
+                              handleViewResume(post.resume_url, post.full_name);
+                            }
+                          }}
+                          className="flex items-center space-x-1 text-blue-600 hover:text-blue-700"
+                        >
+                          <Eye className="w-3 h-3" />
+                          <span>View Full Resume</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -513,11 +612,15 @@ function App() {
                     {user && user.id === post.user_id && (
                       <div className="relative">
                         <button
-                          onClick={() => setShowDeleteConfirm(post.id)}
-                          className="p-2 text-gray-400 hover:text-red-500 rounded-lg hover:bg-red-50 transition-colors"
+                          onClick={() => {
+                            if (window.confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
+                              handleDeletePost(post.id);
+                            }
+                          }}
+                          className="p-2 text-gray-400 hover:text-red-500 rounded-lg hover:bg-red-50 transition-colors group"
                           title="Delete post"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
                         </button>
                       </div>
                     )}
