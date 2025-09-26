@@ -12,6 +12,7 @@ import { EngagementBar } from './components/EngagementBar';
 import { ResumeViewer } from './components/ResumeViewer';
 import { PostDeleteConfirmation } from './components/PostDeleteConfirmation';
 import { RSSFeedManager } from './components/RSSFeedManager';
+import { ProfileSettings } from './components/ProfileSettings';
 import { mockUsers, mockPosts } from './data/mockUsers';
 
 interface User {
