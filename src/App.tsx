@@ -11,6 +11,7 @@ import { CommentSystem } from './components/CommentSystem';
 import { EngagementBar } from './components/EngagementBar';
 import { ResumeViewer } from './components/ResumeViewer';
 import { PostDeleteConfirmation } from './components/PostDeleteConfirmation';
+import { RSSFeedManager } from './components/RSSFeedManager';
 import { mockUsers, mockPosts } from './data/mockUsers';
 
 interface User {
@@ -61,6 +62,7 @@ function App() {
   const [showMessaging, setShowMessaging] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<number | null>(null);
   const [showResumeViewer, setShowResumeViewer] = useState(false);
+  const [showRSSManager, setShowRSSManager] = useState(false);
   const [selectedResume, setSelectedResume] = useState<{ url?: string; file?: File; userName: string } | null>(null);
   const [expandedComments, setExpandedComments] = useState<Set<number>>(new Set());
   const [postCommentCounts, setPostCommentCounts] = useState<Record<number, number>>({});
@@ -229,7 +231,6 @@ function App() {
         <div className="max-w-md w-full space-y-8">
           <div className="text-center">
             <Logo size="lg" className="justify-center mb-4" />
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">Geeks & Nerds</h1>
             <p className="text-gray-600">Connect with tech professionals worldwide</p>
           </div>
           
@@ -472,6 +473,15 @@ function App() {
                   <Mail className="w-5 h-5" />
                   <span>Messages</span>
                 </button>
+                {user && (user.is_super_admin || user.admin_permissions?.rss_management) && (
+                  <button
+                    onClick={() => setShowRSSManager(true)}
+                    className="w-full flex items-center space-x-3 p-3 rounded-lg bg-purple-50 text-purple-600 hover:bg-purple-100 transition duration-200"
+                  >
+                    <Rss className="w-5 h-5" />
+                    <span>RSS Feeds</span>
+                  </button>
+                )}
               </div>
             </div>
 
@@ -889,6 +899,14 @@ function App() {
         <MessagingSystem
           currentUserId={user.id}
           onClose={() => setShowMessaging(false)}
+        />
+      )}
+
+      {/* RSS Feed Manager */}
+      {showRSSManager && user && (
+        <RSSFeedManager
+          user={user}
+          onClose={() => setShowRSSManager(false)}
         />
       )}
 
