@@ -682,29 +682,51 @@ function App() {
                                 >
                                   <Upload className="w-4 h-4" />
                                 </button>
+                                {/* Delete Resume Button - Only for post owner */}
+                                {user && user.id === post.user_id && (
+                                  <button
+                                    onClick={() => setShowDeleteConfirm(post.id)}
+                                    className="p-2 hover:bg-red-600 rounded-lg transition-colors group"
+                                    title="Delete resume post"
+                                  >
+                                    <Trash2 className="w-4 h-4 text-red-200 group-hover:text-white" />
+                                  </button>
+                                )}
                               </div>
                             </div>
                             
-                            {/* Resume Preview */}
+                            {/* Resume Preview - Fixed Display */}
                             <div className="relative">
-                              {post.resume_url ? (
-                                <iframe
-                                  src={post.resume_url}
-                                  className="w-full h-64 border-0"
-                                  title={`Preview of ${post.resume_name}`}
-                                  onError={() => {
-                                    console.error('Failed to load resume preview');
-                                  }}
-                                />
-                              ) : (
-                                <div className="w-full h-64 bg-gray-100 flex items-center justify-center">
-                                  <div className="text-center">
-                                    <User className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                                    <p className="text-gray-600 text-sm mb-2">Resume Preview</p>
-                                    <p className="text-xs text-gray-500">Click "View" to open full resume</p>
+                              <div className="w-full h-80 bg-white">
+                                {post.resume_url ? (
+                                  <iframe
+                                    src={`${post.resume_url}#toolbar=0&navpanes=0&scrollbar=0`}
+                                    className="w-full h-full border-0"
+                                    title={`Preview of ${post.resume_name}`}
+                                    style={{ 
+                                      minHeight: '320px',
+                                      backgroundColor: 'white'
+                                    }}
+                                    onLoad={() => {
+                                      console.log('Resume loaded successfully');
+                                    }}
+                                    onError={(e) => {
+                                      console.error('Failed to load resume preview:', e);
+                                      // Fallback to document viewer
+                                      const iframe = e.target as HTMLIFrameElement;
+                                      iframe.src = `https://docs.google.com/viewer?url=${encodeURIComponent(post.resume_url!)}&embedded=true`;
+                                    }}
+                                  />
+                                ) : (
+                                  <div className="w-full h-full bg-gray-50 flex items-center justify-center">
+                                    <div className="text-center">
+                                      <User className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                                      <p className="text-gray-600 text-lg font-medium mb-2">Resume Preview</p>
+                                      <p className="text-gray-500 text-sm">Document is loading...</p>
+                                    </div>
                                   </div>
-                                </div>
-                              )}
+                                )}
+                              </div>
                               
                               {/* Resume type indicator */}
                               <div className="absolute top-2 right-2">
@@ -716,7 +738,10 @@ function App() {
                             
                             {/* Resume info footer */}
                             <div className="bg-blue-50 px-4 py-3 text-sm text-blue-800 flex items-center justify-between">
-                              <p>Professional Resume</p>
+                              <div className="flex items-center space-x-2">
+                                <User className="w-4 h-4" />
+                                <span>Professional Resume • {post.full_name}</span>
+                              </div>
                               <div className="flex space-x-3">
                                 <button
                                   onClick={() => {
@@ -728,6 +753,20 @@ function App() {
                                 >
                                   <Eye className="w-3 h-3" />
                                   <span>View</span>
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    if (post.resume_url) {
+                                      const link = document.createElement('a');
+                                      link.href = post.resume_url;
+                                      link.download = post.resume_name || 'resume.pdf';
+                                      link.click();
+                                    }
+                                  }}
+                                  className="flex items-center space-x-1 text-blue-600 hover:text-blue-700"
+                                >
+                                  <Upload className="w-3 h-3" />
+                                  <span>Download</span>
                                 </button>
                               </div>
                             </div>

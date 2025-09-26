@@ -117,12 +117,34 @@ export const ResumeUpload: React.FC<ResumeUploadProps> = ({ onFileSelect, onRemo
             <User className="w-4 h-4 text-blue-600" />
             <h4 className="text-sm font-medium text-blue-900">Resume Preview</h4>
           </div>
-          <div className="h-64 bg-white">
+          <div className="h-80 bg-white relative">
             <iframe
-              src={URL.createObjectURL(selectedFile.file)}
+              src={`${URL.createObjectURL(selectedFile.file)}#toolbar=0&navpanes=0&scrollbar=1&zoom=page-width`}
               className="w-full h-full border-0"
               title="Resume Preview"
+              style={{ 
+                backgroundColor: 'white',
+                minHeight: '320px'
+              }}
+              onLoad={() => {
+                console.log('Resume preview loaded successfully');
+              }}
+              onError={(e) => {
+                console.error('Resume preview failed to load');
+                // Try Google Docs viewer as fallback
+                const iframe = e.target as HTMLIFrameElement;
+                const fileUrl = URL.createObjectURL(selectedFile.file);
+                iframe.src = `https://docs.google.com/viewer?url=${encodeURIComponent(fileUrl)}&embedded=true`;
+              }}
             />
+            
+            {/* Loading indicator */}
+            <div className="absolute inset-0 bg-gray-50 flex items-center justify-center" id="resume-loading">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
+                <p className="text-sm text-gray-600">Loading resume...</p>
+              </div>
+            </div>
           </div>
         </div>
 

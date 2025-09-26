@@ -258,16 +258,45 @@ export const ResumeViewer: React.FC<ResumeViewerProps> = ({
                 <iframe
                   src={`https://docs.google.com/viewer?url=${encodeURIComponent(documentUrl)}&embedded=true`}
                   className="w-full h-screen border-0"
-                  title={`${userName}'s Resume`}
+                src={`${previewUrl}#toolbar=1&navpanes=1&scrollbar=1&zoom=page-fit`}
                   onLoad={() => setLoading(false)}
                   onError={() => setError('Failed to load document')}
+                style={{ 
+                  minHeight: '600px',
+                  backgroundColor: 'white'
+                }}
                 />
+                onLoad={() => {
+                  console.log('PDF loaded successfully in viewer');
+                }}
               </div>
             ) : (
-              <div className="flex items-center justify-center h-96 bg-gray-50">
+              <div className="w-full h-96 bg-white">
+                <iframe
+                  src={`https://docs.google.com/viewer?url=${encodeURIComponent(previewUrl)}&embedded=true`}
+                  className="w-full h-full border-0"
+                  title={`Preview of ${getFileName()}`}
+                  style={{ 
+                    minHeight: '600px',
+                    backgroundColor: 'white'
+                  }}
+                  onError={() => {
+                    setError('Unable to preview this document format');
+                  }}
+                  onLoad={() => {
+                    console.log('Document loaded successfully in Google Viewer');
+                  }}
+                />
+              </div>
+            )}
+            
+            {/* Fallback for unsupported formats */}
+            {error && (
+              <div className="absolute inset-0 w-full h-96 flex items-center justify-center bg-gray-100">
                 <div className="text-center">
                   <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Document Preview</h3>
+                  <p className="text-gray-600 mb-4">Preview not available</p>
+                  <p className="text-sm text-gray-500 mb-4">{error}</p>
                   <p className="text-gray-600 mb-4">
                     This document format may not support inline preview
                   </p>

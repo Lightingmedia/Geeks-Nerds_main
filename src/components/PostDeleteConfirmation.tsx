@@ -79,14 +79,15 @@ export const PostDeleteConfirmation: React.FC<PostDeleteConfirmationProps> = ({
         <div className="p-6">
           <div className="mb-4">
             <p className="text-gray-700 mb-3">
-              Are you sure you want to delete this post? This will permanently remove it from your profile and the community feed.
+              Are you sure you want to delete this {postContent.includes('resume') || postContent.includes('CV') ? 'resume post' : 'post'}? This will permanently remove it from your profile and the community feed.
             </p>
             
             {/* Post Preview */}
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
               <div className="flex items-center space-x-2 mb-2">
+                <User className="w-4 h-4 text-gray-600" />
                 <span className="text-sm font-medium text-gray-900">{postAuthor}</span>
-                <span className="text-xs text-gray-500">• Your post</span>
+                <span className="text-xs text-gray-500">• Your {postContent.includes('resume') || postContent.includes('CV') ? 'resume' : 'post'}</span>
               </div>
               <p className="text-sm text-gray-700 leading-relaxed">
                 {truncateContent(postContent)}
