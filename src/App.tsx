@@ -481,7 +481,7 @@ function App() {
                             <div className="bg-gray-800 text-white p-4 flex items-center justify-between">
                               <div className="flex items-center space-x-3">
                                 <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
-                                  <Upload className="w-5 h-5 text-red-600" />
+                                  <FileText className="w-5 h-5 text-red-600" />
                                 </div>
                                 <div>
                                   <p className="font-medium text-white">{post.document_name}</p>
@@ -491,8 +491,9 @@ function App() {
                               <div className="flex items-center space-x-2">
                                 <button
                                   onClick={() => {
-                                    // In a real app, this would open the actual PDF
-                                    window.open(`/documents/${post.document_name}`, '_blank');
+                                    if (post.document_url) {
+                                      window.open(post.document_url, '_blank');
+                                    }
                                   }}
                                   className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
                                   title="Open in new tab"
@@ -501,11 +502,12 @@ function App() {
                                 </button>
                                 <button
                                   onClick={() => {
-                                    // In a real app, this would download the actual PDF
-                                    const link = document.createElement('a');
-                                    link.href = `/documents/${post.document_name}`;
-                                    link.download = post.document_name;
-                                    link.click();
+                                    if (post.document_url) {
+                                      const link = document.createElement('a');
+                                      link.href = post.document_url;
+                                      link.download = post.document_name;
+                                      link.click();
+                                    }
                                   }}
                                   className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
                                   title="Download"
@@ -517,16 +519,24 @@ function App() {
                             
                             {/* PDF Preview */}
                             <div className="relative">
-                              <div className="w-full h-64 bg-gray-100 flex items-center justify-center">
-                                <div className="text-center">
-                                  <Upload className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                                  <p className="text-gray-600 text-sm mb-2">PDF Preview</p>
-                                  <p className="text-xs text-gray-500">Click "Open" to view full document</p>
+                              {post.document_url ? (
+                                <iframe
+                                  src={post.document_url}
+                                  className="w-full h-64 border-0"
+                                  title={`Preview of ${post.document_name}`}
+                                  onError={() => {
+                                    console.error('Failed to load PDF preview');
+                                  }}
+                                />
+                              ) : (
+                                <div className="w-full h-64 bg-gray-100 flex items-center justify-center">
+                                  <div className="text-center">
+                                    <FileText className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                                    <p className="text-gray-600 text-sm mb-2">PDF Preview</p>
+                                    <p className="text-xs text-gray-500">Click "Open" to view full document</p>
+                                  </div>
                                 </div>
-                              </div>
-                              
-                              {/* Preview overlay */}
-                              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
+                              )}
                               
                               {/* Document type indicator */}
                               <div className="absolute top-2 right-2">
@@ -541,7 +551,11 @@ function App() {
                               <p>Shared document</p>
                               <div className="flex space-x-3">
                                 <button
-                                  onClick={() => window.open(`/documents/${post.document_name}`, '_blank')}
+                                  onClick={() => {
+                                    if (post.document_url) {
+                                      window.open(post.document_url, '_blank');
+                                    }
+                                  }}
                                   className="flex items-center space-x-1 text-indigo-600 hover:text-indigo-700"
                                 >
                                   <Eye className="w-3 h-3" />
