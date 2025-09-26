@@ -63,6 +63,7 @@ function App() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<number | null>(null);
   const [showResumeViewer, setShowResumeViewer] = useState(false);
   const [showRSSManager, setShowRSSManager] = useState(false);
+  const [showProfileSettings, setShowProfileSettings] = useState(false);
   const [selectedResume, setSelectedResume] = useState<{ url?: string; file?: File; userName: string } | null>(null);
   const [expandedComments, setExpandedComments] = useState<Set<number>>(new Set());
   const [postCommentCounts, setPostCommentCounts] = useState<Record<number, number>>({});
@@ -404,7 +405,9 @@ function App() {
                 <img
                   src={user?.profile_picture || 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop'}
                   alt={user?.full_name}
-                  className="w-8 h-8 rounded-full"
+                  className="w-8 h-8 rounded-full cursor-pointer hover:ring-2 hover:ring-indigo-300 transition-all"
+                  onClick={() => setShowProfileSettings(true)}
+                  title="Click to change profile picture"
                 />
                 <span className="text-sm font-medium text-gray-700">{user?.full_name}</span>
               </div>
@@ -898,6 +901,15 @@ function App() {
         <RSSFeedManager
           user={user}
           onClose={() => setShowRSSManager(false)}
+        />
+      )}
+
+      {/* Profile Settings */}
+      {showProfileSettings && user && (
+        <ProfileSettings
+          user={user}
+          onClose={() => setShowProfileSettings(false)}
+          onUpdateUser={setUser}
         />
       )}
 
