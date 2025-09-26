@@ -102,9 +102,7 @@ export const ResumeViewer: React.FC<ResumeViewerProps> = ({
     return () => {
       window.removeEventListener('online', checkConnection);
       window.removeEventListener('offline', checkConnection);
-    };
-    // Cleanup function
-    return () => {
+      // Cleanup function
       if (resumeFile && documentUrl) {
         URL.revokeObjectURL(documentUrl);
       }
@@ -230,10 +228,6 @@ export const ResumeViewer: React.FC<ResumeViewerProps> = ({
                     Retry attempt: {retryCount}
                   </p>
                 )}
-              <div className="text-center">
-                <Loader className="w-12 h-12 animate-spin mx-auto mb-4 text-indigo-600" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Loading Resume</h3>
-                <p className="text-gray-600">Please wait while we prepare the document...</p>
               </div>
             </div>
           </div>
@@ -284,12 +278,6 @@ export const ResumeViewer: React.FC<ResumeViewerProps> = ({
                   >
                     <RefreshCw className="w-4 h-4" />
                     <span>Retry</span>
-                  </button>
-                  <button
-                    onClick={handleRetry}
-                    className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-                  >
-                    Try Again
                   </button>
                 </div>
               </div>
@@ -491,7 +479,7 @@ export const ResumeViewer: React.FC<ResumeViewerProps> = ({
 
         {/* Document Info */}
         {/* Performance Tips */}
-        {(fileSize && fileSize > 5 * 1024 * 1024) || connectionStatus === 'slow' && (
+        {((fileSize && fileSize > 5 * 1024 * 1024) || connectionStatus === 'slow') && (
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg mt-6 p-4">
             <h4 className="font-semibold text-yellow-800 mb-2">Performance Tips</h4>
             <ul className="text-sm text-yellow-700 space-y-1">
