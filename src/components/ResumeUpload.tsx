@@ -118,21 +118,11 @@ export const ResumeUpload: React.FC<ResumeUploadProps> = ({ onFileSelect, onRemo
             <h4 className="text-sm font-medium text-blue-900">Resume Preview</h4>
           </div>
           <div className="h-64 bg-white">
-            {selectedFile.file.type === 'application/pdf' ? (
-              <iframe
-                src={URL.createObjectURL(selectedFile.file)}
-                className="w-full h-full border-0"
-                title="Resume Preview"
-              />
-            ) : (
-              <div className="flex items-center justify-center h-full bg-gray-50">
-                <div className="text-center">
-                  <FileText className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                  <p className="text-gray-600 text-sm mb-2">Document Preview</p>
-                  <p className="text-xs text-gray-500">Click "Preview" to view full document</p>
-                </div>
-              </div>
-            )}
+            <iframe
+              src={URL.createObjectURL(selectedFile.file)}
+              className="w-full h-full border-0"
+              title="Resume Preview"
+            />
           </div>
         </div>
 
