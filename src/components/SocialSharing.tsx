@@ -20,9 +20,30 @@ export const SocialSharing: React.FC<SocialSharingProps> = ({
   const [copied, setCopied] = useState(false);
   const [shareCount, setShareCount] = useState(Math.floor(Math.random() * 50) + 10); // Mock share count
 
-  const encodedUrl = encodeURIComponent(url);
-  const encodedTitle = encodeURIComponent(title);
-  const encodedDescription = encodeURIComponent(description);
+  // Sanitize strings to prevent URI malformed errors
+  const sanitizeForURI = (str: string): string => {
+    try {
+      // Remove or replace problematic Unicode characters
+      return str
+        .replace(/[\uD800-\uDFFF]/g, '') // Remove unpaired surrogate halves
+        .replace(/[^\u0000-\u007F]/g, (char) => {
+          // Try to encode non-ASCII characters, fallback to empty string if it fails
+          try {
+            encodeURIComponent(char);
+            return char;
+          } catch {
+            return '';
+          }
+        })
+        .trim();
+    } catch {
+      return '';
+    }
+  };
+
+  const encodedUrl = encodeURIComponent(sanitizeForURI(url));
+  const encodedTitle = encodeURIComponent(sanitizeForURI(title));
+  const encodedDescription = encodeURIComponent(sanitizeForURI(description));
   const hashtagString = hashtags.map(tag => `#${tag}`).join(' ');
 
   const shareLinks = {
