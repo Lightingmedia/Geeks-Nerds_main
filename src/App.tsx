@@ -227,17 +227,17 @@ function App() {
 
   if (showLogin) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 flex items-center justify-center py-12 px-4">
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 flex items-center justify-center p-4">
         <div className="max-w-md w-full space-y-8">
           <div className="text-center">
             <Logo size="lg" className="justify-center mb-4" />
             <p className="text-gray-600">Connect with tech professionals worldwide</p>
           </div>
           
-          <div className="bg-white rounded-lg shadow-xl p-8">
+          <div className="bg-white rounded-lg shadow-xl p-8 mx-auto">
             {!showRegister ? (
               <form onSubmit={handleLogin} className="space-y-6">
-                <h2 className="text-2xl font-bold text-center mb-6">Sign In</h2>
+                <h2 className="text-2xl font-bold text-gray-900 text-center mb-6">Sign In</h2>
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
@@ -265,7 +265,7 @@ function App() {
                 
                 <button
                   type="submit"
-                  className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-200"
+                  className="w-full bg-indigo-600 text-white py-3 px-4 rounded-md hover:bg-indigo-700 transition duration-200 font-medium"
                 >
                   Sign In
                 </button>
@@ -286,7 +286,7 @@ function App() {
               </form>
             ) : (
               <form onSubmit={handleRegister} className="space-y-6">
-                <h2 className="text-2xl font-bold text-center mb-6">Sign Up</h2>
+                <h2 className="text-2xl font-bold text-gray-900 text-center mb-6">Sign Up</h2>
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
@@ -350,7 +350,7 @@ function App() {
                 
                 <button
                   type="submit"
-                  className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-200"
+                  className="w-full bg-indigo-600 text-white py-3 px-4 rounded-md hover:bg-indigo-700 transition duration-200 font-medium"
                 >
                   Create Account
                 </button>
