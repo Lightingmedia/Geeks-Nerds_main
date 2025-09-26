@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { User, Camera, Upload, X, Check, AlertCircle, Mail, MapPin, Briefcase, Building, Edit3 } from 'lucide-react';
+import { User, Camera, Upload, X, Check, AlertCircle, Mail, MapPin, Briefcase, Building, CreditCard as Edit3 } from 'lucide-react';
 
 interface ProfileSettingsProps {
   user: any;
