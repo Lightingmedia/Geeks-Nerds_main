@@ -283,15 +283,6 @@ function App() {
                   </p>
                 </div>
 
-                <div className="border-t pt-4 mt-4">
-                  <p className="text-xs text-gray-500 mb-2">Demo accounts:</p>
-                  <div className="space-y-1 text-xs text-gray-600">
-                    <p>📧 alex.chen@meta.com | 🔑 geek123</p>
-                    <p>📧 sarah.johnson@google.com | 🔑 geek123</p>
-                    <p>📧 emily.watson@startup.io | 🔑 geek123</p>
-                    <p>📧 david.kim@nvidia.com | 🔑 geek123</p>
-                  </div>
-                </div>
               </form>
             ) : (
               <form onSubmit={handleRegister} className="space-y-6">
