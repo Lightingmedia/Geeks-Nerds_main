@@ -122,7 +122,7 @@ export const Footer: React.FC = () => {
           <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
             <div className="text-sm text-gray-400 mb-4 md:mb-0">
               © 2024 Geeks & Nerds Inc. All rights reserved. | 
-              <span className="ml-2">Reg. No: 12345678 | VAT: GB123456789</span>
+              <span className="ml-2"></span>
             </div>
             <div className="flex items-center space-x-4 text-sm text-gray-400">
               <span>🇺🇸 English (US)</span>
