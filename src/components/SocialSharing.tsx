@@ -56,6 +56,12 @@ export const SocialSharing: React.FC<SocialSharingProps> = ({
   };
 
   const handleShare = async (platform: string) => {
+    // Validate URL before sharing
+    if (!url || url.trim() === '') {
+      console.error('Cannot share: URL is empty');
+      return;
+    }
+
     // Google Analytics event tracking
     if (typeof window !== 'undefined' && (window as any).gtag) {
       (window as any).gtag('event', 'share', {
@@ -71,6 +77,13 @@ export const SocialSharing: React.FC<SocialSharingProps> = ({
     if (platform === 'copy') {
       try {
         await navigator.clipboard.writeText(url);
+        
+        // Validate that the URL was actually copied
+        const copiedText = await navigator.clipboard.readText();
+        if (copiedText !== url) {
+          throw new Error('Copy verification failed');
+        }
+        
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
       } catch (err) {
@@ -86,6 +99,11 @@ export const SocialSharing: React.FC<SocialSharingProps> = ({
       }
     } else if (platform === 'native' && navigator.share) {
       try {
+        // Validate share data before attempting to share
+        if (!title || !url) {
+          throw new Error('Missing required share data');
+        }
+        
         await navigator.share({
           title,
           text: description,
@@ -95,6 +113,19 @@ export const SocialSharing: React.FC<SocialSharingProps> = ({
         console.log('Native sharing cancelled or failed');
       }
     } else {
+      // Validate share link before opening
+      const shareUrl = shareLinks[platform as keyof typeof shareLinks];
+      if (!shareUrl) {
+        console.error('Invalid sharing platform:', platform);
+        return;
+      }
+      
+      // Check if URL is properly encoded
+      if (!shareUrl.includes(encodedUrl)) {
+        console.error('URL encoding failed for platform:', platform);
+        return;
+      }
+      
       window.open(shareLinks[platform as keyof typeof shareLinks], '_blank', 'width=600,height=400');
     }
 
@@ -155,6 +186,13 @@ export const SocialSharing: React.FC<SocialSharingProps> = ({
           
           {/* Share Menu */}
           <div className="absolute bottom-full left-0 mb-2 bg-white rounded-lg shadow-xl border border-gray-200 p-4 z-50 min-w-[280px]">
+            {/* Validation Warning */}
+            {(!url || url.trim() === '') && (
+              <div className="mb-3 p-2 bg-red-50 border border-red-200 rounded text-red-700 text-xs">
+                ⚠ Cannot share: Invalid or missing URL
+              </div>
+            )}
+            
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-semibold text-gray-900">Share this post</h3>
               <span className="text-xs text-gray-500">{shareCount} shares</span>
@@ -172,6 +210,7 @@ export const SocialSharing: React.FC<SocialSharingProps> = ({
                 <button
                   onClick={() => handleShare('copy')}
                   className="flex items-center space-x-1 px-2 py-1 bg-indigo-600 text-white text-xs rounded hover:bg-indigo-700 transition-colors"
+                  disabled={!url || url.trim() === ''}
                 >
                   {copied ? (
                     <>
@@ -196,6 +235,7 @@ export const SocialSharing: React.FC<SocialSharingProps> = ({
                   <button
                     key={platform.key}
                     onClick={() => handleShare(platform.key)}
+                    disabled={!url || url.trim() === ''}
                     className={`flex items-center space-x-2 p-2 rounded-md transition-colors ${platform.color}`}
                   >
                     <Icon className="w-4 h-4" />
@@ -209,6 +249,7 @@ export const SocialSharing: React.FC<SocialSharingProps> = ({
             {navigator.share && (
               <button
                 onClick={() => handleShare('native')}
+                disabled={!url || url.trim() === ''}
                 className="w-full mt-2 flex items-center justify-center space-x-2 p-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
               >
                 <Share2 className="w-4 h-4" />
