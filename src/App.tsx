@@ -467,15 +467,6 @@ function App() {
                   <Mail className="w-5 h-5" />
                   <span>Messages</span>
                 </button>
-                {user && (user.is_super_admin || user.admin_permissions?.rss_management) && (
-                  <button
-                    onClick={() => setShowRSSManager(true)}
-                    className="w-full flex items-center space-x-3 p-3 rounded-lg bg-purple-50 text-purple-600 hover:bg-purple-100 transition duration-200"
-                  >
-                    <Rss className="w-5 h-5" />
-                    <span>RSS Feeds</span>
-                  </button>
-                )}
               </div>
             </div>
 

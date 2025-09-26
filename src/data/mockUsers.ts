@@ -280,6 +280,85 @@ export const mockPosts: Post[] = [
   ...rssGeneratedPosts,
   // User-generated posts
   {
+    id: 101,
+    user_id: 9,
+    content: "Just deployed my first microservices architecture using Docker and Kubernetes! 🚀\n\nThe learning curve was steep, but the scalability benefits are incredible. Here's what I learned:\n\n✅ Container orchestration is a game-changer\n✅ Service mesh makes communication seamless\n✅ Auto-scaling saves costs and improves performance\n\nNext up: implementing CI/CD pipelines with GitLab!\n\n#DevOps #Kubernetes #Docker #Microservices",
+    post_type: 'text',
+    created_at: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
+    likes_count: 67,
+    comments_count: 18,
+    full_name: 'Alex Thompson',
+    profile_picture: 'https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
+    job_title: 'DevOps Engineer',
+    company: 'CloudTech Solutions'
+  },
+  {
+    id: 102,
+    user_id: 10,
+    content: "Excited to share my latest React component library! 📚⚡\n\nAfter months of development, I've created a comprehensive UI kit with:\n\n🎨 50+ customizable components\n🌙 Dark/light theme support\n📱 Mobile-first responsive design\n♿ Full accessibility compliance\n🎯 TypeScript support\n\nOpen source and ready for production use!\n\n#React #OpenSource #UIKit #TypeScript #WebDev",
+    post_type: 'text',
+    created_at: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
+    likes_count: 143,
+    comments_count: 32,
+    full_name: 'Maya Patel',
+    profile_picture: 'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
+    job_title: 'Frontend Developer',
+    company: 'Design Systems Inc'
+  },
+  {
+    id: 103,
+    user_id: 11,
+    content: `// Clean code tip: Use meaningful variable names
+
+// ❌ Bad - unclear and abbreviated
+const d = new Date();
+const u = users.filter(x => x.a > 18);
+const calc = (a, b) => a * b * 0.1;
+
+// ✅ Good - descriptive and clear
+const currentDate = new Date();
+const adultUsers = users.filter(user => user.age > 18);
+const calculateTaxAmount = (price, quantity) => price * quantity * TAX_RATE;
+
+// Your future self will thank you! 🙏
+// Code is read more often than it's written.`,
+    post_type: 'code',
+    code_language: 'javascript',
+    created_at: new Date(Date.now() - 7 * 60 * 60 * 1000).toISOString(),
+    likes_count: 89,
+    comments_count: 24,
+    full_name: 'Jordan Williams',
+    profile_picture: 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
+    job_title: 'Senior Software Engineer',
+    company: 'CodeCraft Technologies'
+  },
+  {
+    id: 104,
+    user_id: 12,
+    content: "Breaking into cybersecurity was the best career decision I ever made! 🔐💪\n\nFrom zero knowledge to landing my dream job in 18 months:\n\n📚 Self-studied for 6 months (CompTIA Security+)\n🏆 Got certified in ethical hacking\n💼 Started with internship at local firm\n🚀 Now working on enterprise security solutions\n\nKey advice for aspiring cybersecurity professionals:\n• Start with fundamentals (networking, OS basics)\n• Practice on platforms like TryHackMe and HackTheBox\n• Join cybersecurity communities and forums\n• Never stop learning - threats evolve daily!\n\n#Cybersecurity #CareerChange #InfoSec #EthicalHacking",
+    post_type: 'text',
+    created_at: new Date(Date.now() - 10 * 60 * 60 * 1000).toISOString(),
+    likes_count: 156,
+    comments_count: 41,
+    full_name: 'Priya Singh',
+    profile_picture: 'https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
+    job_title: 'Cybersecurity Analyst',
+    company: 'SecureGuard Systems'
+  },
+  {
+    id: 105,
+    user_id: 13,
+    content: "Just finished building an AI-powered chatbot for customer service! 🤖✨\n\nUsing Python, TensorFlow, and natural language processing, this bot can:\n\n🎯 Handle 80% of common customer queries\n🧠 Learn from interactions to improve responses\n🌍 Support multiple languages\n📊 Provide analytics on customer sentiment\n⚡ Reduce response time from hours to seconds\n\nThe future of customer service is here, and it's incredibly exciting!\n\nWould love to connect with other AI enthusiasts working on similar projects!\n\n#AI #MachineLearning #NLP #CustomerService #Python #TensorFlow",
+    post_type: 'text',
+    created_at: new Date(Date.now() - 14 * 60 * 60 * 1000).toISOString(),
+    likes_count: 201,
+    comments_count: 56,
+    full_name: 'Carlos Rodriguez',
+    profile_picture: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
+    job_title: 'AI/ML Engineer',
+    company: 'IntelliBot Solutions'
+  },
+  {
     id: 2,
     user_id: 2,
     content: "Just finished implementing a neural network for medical image analysis! 🧠🏥\n\nThe model achieved 94% accuracy in detecting early-stage tumors. It's amazing how AI can assist healthcare professionals in making faster, more accurate diagnoses.\n\nNext step: Working on reducing false positives and improving edge case handling. The potential to save lives through technology is what drives me every day! 💪\n\n#AI #Healthcare #MachineLearning #MedTech",
