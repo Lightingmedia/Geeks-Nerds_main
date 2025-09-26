@@ -154,7 +154,7 @@ export const SocialSharing: React.FC<SocialSharingProps> = ({
           />
           
           {/* Share Menu */}
-          <div className="absolute bottom-full right-0 mb-2 bg-white rounded-lg shadow-xl border border-gray-200 p-4 z-50 min-w-[280px]">
+          <div className="absolute bottom-full left-0 mb-2 bg-white rounded-lg shadow-xl border border-gray-200 p-4 z-50 min-w-[280px]">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-semibold text-gray-900">Share this post</h3>
               <span className="text-xs text-gray-500">{shareCount} shares</span>

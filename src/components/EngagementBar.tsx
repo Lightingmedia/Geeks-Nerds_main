@@ -70,12 +70,14 @@ export const EngagementBar: React.FC<EngagementBarProps> = ({
         </button>
         
         {/* Share */}
-        <SocialSharing
-          url={shareUrl}
-          title={shareTitle}
-          description={shareDescription}
-          hashtags={hashtags}
-        />
+        <div className="relative">
+          <SocialSharing
+            url={shareUrl}
+            title={shareTitle}
+            description={shareDescription}
+            hashtags={hashtags}
+          />
+        </div>
       </div>
 
       <div className="flex items-center space-x-2">

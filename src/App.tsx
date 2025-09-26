@@ -638,6 +638,102 @@ function App() {
                           </div>
                         )}
                       </div>
+                    ) : post.post_type === 'resume' ? (
+                      <div className="space-y-4">
+                        {post.content && (
+                          <p className="text-gray-900 whitespace-pre-wrap leading-relaxed">{post.content}</p>
+                        )}
+                        {post.resume_name && (
+                          <div className="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
+                            {/* Resume Header */}
+                            <div className="bg-blue-800 text-white p-4 flex items-center justify-between">
+                              <div className="flex items-center space-x-3">
+                                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                  <User className="w-5 h-5 text-blue-600" />
+                                </div>
+                                <div>
+                                  <p className="font-medium text-white">{post.resume_name}</p>
+                                  <p className="text-sm text-blue-200">Resume/CV</p>
+                                </div>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <button
+                                  onClick={() => {
+                                    if (post.resume_url) {
+                                      handleViewResume(post.resume_url, post.full_name);
+                                    }
+                                  }}
+                                  className="p-2 hover:bg-blue-700 rounded-lg transition-colors"
+                                  title="View resume"
+                                >
+                                  <Eye className="w-4 h-4" />
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    if (post.resume_url) {
+                                      const link = document.createElement('a');
+                                      link.href = post.resume_url;
+                                      link.download = post.resume_name;
+                                      link.click();
+                                    }
+                                  }}
+                                  className="p-2 hover:bg-blue-700 rounded-lg transition-colors"
+                                  title="Download"
+                                >
+                                  <Upload className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </div>
+                            
+                            {/* Resume Preview */}
+                            <div className="relative">
+                              {post.resume_url ? (
+                                <iframe
+                                  src={post.resume_url}
+                                  className="w-full h-64 border-0"
+                                  title={`Preview of ${post.resume_name}`}
+                                  onError={() => {
+                                    console.error('Failed to load resume preview');
+                                  }}
+                                />
+                              ) : (
+                                <div className="w-full h-64 bg-gray-100 flex items-center justify-center">
+                                  <div className="text-center">
+                                    <User className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                                    <p className="text-gray-600 text-sm mb-2">Resume Preview</p>
+                                    <p className="text-xs text-gray-500">Click "View" to open full resume</p>
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {/* Resume type indicator */}
+                              <div className="absolute top-2 right-2">
+                                <span className="bg-blue-600 text-white text-xs px-2 py-1 rounded">
+                                  CV
+                                </span>
+                              </div>
+                            </div>
+                            
+                            {/* Resume info footer */}
+                            <div className="bg-blue-50 px-4 py-3 text-sm text-blue-800 flex items-center justify-between">
+                              <p>Professional Resume</p>
+                              <div className="flex space-x-3">
+                                <button
+                                  onClick={() => {
+                                    if (post.resume_url) {
+                                      handleViewResume(post.resume_url, post.full_name);
+                                    }
+                                  }}
+                                  className="flex items-center space-x-1 text-blue-600 hover:text-blue-700"
+                                >
+                                  <Eye className="w-3 h-3" />
+                                  <span>View</span>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     ) : post.url_preview ? (
                       <div className="space-y-4">
                         {post.content && (
