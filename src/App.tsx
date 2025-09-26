@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { User, Heart, MessageCircle, Share2, Upload, Plus, X, Search, Bell, Settings, FileText, Eye, Mail, Trash2, MoreHorizontal } from 'lucide-react';
+import { User, Upload, Plus, X, Search, Bell, Settings, FileText, Eye, Mail, Trash2, MoreHorizontal } from 'lucide-react';
 import { Logo } from './components/Logo';
 import { CodeSnippet } from './components/CodeSnippet';
 import { PostCreator } from './components/PostCreator';
 import { Footer } from './components/Footer';
 import { CookieConsent } from './components/CookieConsent';
 import { MessagingSystem } from './components/MessagingSystem';
+import { CommentSystem } from './components/CommentSystem';
+import { EngagementBar } from './components/EngagementBar';
 import { mockUsers, mockPosts } from './data/mockUsers';
 
 interface User {
@@ -44,6 +46,8 @@ function App() {
   const [showCreatePost, setShowCreatePost] = useState(false);
   const [showMessaging, setShowMessaging] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<number | null>(null);
+  const [expandedComments, setExpandedComments] = useState<Set<number>>(new Set());
+  const [postCommentCounts, setPostCommentCounts] = useState<Record<number, number>>({});
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
   const [registerForm, setRegisterForm] = useState({
     email: '',
@@ -92,6 +96,22 @@ function App() {
 
   const handleCreatePost = (post: Post) => {
     setPosts([post, ...posts]);
+  };
+
+  const handleCommentCountChange = (postId: number, count: number) => {
+    setPostCommentCounts(prev => ({ ...prev, [postId]: count }));
+  };
+
+  const toggleComments = (postId: number) => {
+    setExpandedComments(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(postId)) {
+        newSet.delete(postId);
+      } else {
+        newSet.add(postId);
+      }
+      return newSet;
+    });
   };
 
   const handleDeletePost = (postId: number) => {
@@ -537,23 +557,26 @@ function App() {
                     )}
                   </div>
 
-                  <div className="flex items-center space-x-6 text-sm text-gray-500 border-t pt-4">
-                    <button
-                      onClick={() => handleLike(post.id)}
-                      className="flex items-center space-x-2 hover:text-red-500 transition duration-200"
-                    >
-                      <Heart className="w-4 h-4" />
-                      <span>{post.likes_count}</span>
-                    </button>
-                    <button className="flex items-center space-x-2 hover:text-blue-500 transition duration-200">
-                      <MessageCircle className="w-4 h-4" />
-                      <span>{post.comments_count}</span>
-                    </button>
-                    <button className="flex items-center space-x-2 hover:text-green-500 transition duration-200">
-                      <Share2 className="w-4 h-4" />
-                      <span>Share</span>
-                    </button>
-                  </div>
+                  {/* Engagement Bar */}
+                  <EngagementBar
+                    postId={post.id}
+                    currentUser={user}
+                    commentsCount={postCommentCounts[post.id] || post.comments_count}
+                    onCommentClick={() => toggleComments(post.id)}
+                    shareUrl={`${window.location.origin}/post/${post.id}`}
+                    shareTitle={post.content.length > 100 ? `${post.content.substring(0, 100)}...` : post.content}
+                    shareDescription={`Shared by ${post.full_name} - ${post.job_title} at ${post.company}`}
+                    hashtags={['GeeksAndNerds', 'Tech', 'Programming']}
+                  />
+
+                  {/* Comments Section */}
+                  {expandedComments.has(post.id) && (
+                    <CommentSystem
+                      postId={post.id}
+                      currentUser={user}
+                      onCommentCountChange={(count) => handleCommentCountChange(post.id, count)}
+                    />
+                  )}
                 </div>
               ))}
             </div>

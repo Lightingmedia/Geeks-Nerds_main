@@ -14,8 +14,15 @@
       'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
       })(window,document,'script','dataLayer','GTM-XXXXXXX');
       
-      // Google AdSense - Replace with your actual AdSense client ID
+      // Google AdSense Auto Ads - Replace with your actual AdSense client ID
       window.adsbygoogle = window.adsbygoogle || [];
+      
+      // AdSense configuration for social engagement
+      window.adsbygoogle.push({
+        google_ad_client: "ca-pub-XXXXXXXXXXXXXXXX",
+        enable_page_level_ads: true,
+        overlays: {bottom: true}
+      });
     </script>
     
     <!-- Google AdSense -->
@@ -38,10 +45,30 @@
       // Replace G-XXXXXXXXXX with your actual GA4 Measurement ID
       gtag('config', 'G-XXXXXXXXXX', {
         'anonymize_ip': true,
-        'allow_google_signals': false,
-        'allow_ad_personalization_signals': false
+        'allow_google_signals': true,
+        'allow_ad_personalization_signals': true,
+        'custom_map': {
+          'custom_parameter_1': 'engagement_type',
+          'custom_parameter_2': 'content_category'
+        }
+      });
+      
+      // Enhanced ecommerce and engagement tracking
+      gtag('config', 'G-XXXXXXXXXX', {
+        'send_page_view': true,
+        'enhanced_link_attribution': true
       });
     </script>
+    
+    <!-- Open Graph Meta Tags for Social Sharing -->
+    <meta property="og:site_name" content="Geeks & Nerds" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@geeksandnerds" />
+    <meta name="twitter:creator" content="@geeksandnerds" />
     
     <title>Geeks &amp; Nerds</title>
   </head>
