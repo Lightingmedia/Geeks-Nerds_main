@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, Upload, Plus, X, Search, Bell, Settings, FileText, Eye, Mail, Trash2, MoreHorizontal } from 'lucide-react';
+import { User, Upload, Plus, X, Search, Bell, Settings, FileText, Eye, Mail, Trash2, MoreHorizontal, ExternalLink } from 'lucide-react';
 import { Logo } from './components/Logo';
 import { CodeSnippet } from './components/CodeSnippet';
 import { PostCreator } from './components/PostCreator';
