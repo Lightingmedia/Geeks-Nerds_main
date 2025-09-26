@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, Upload, Plus, X, Search, Bell, Settings, FileText, Eye, Mail, Trash2, MoreHorizontal, ExternalLink } from 'lucide-react';
+import { User, Upload, Plus, X, Search, Bell, Settings, FileText, Eye, Mail, Trash2, MoreHorizontal, ExternalLink, ArrowLeft } from 'lucide-react';
 import { Logo } from './components/Logo';
 import { CodeSnippet } from './components/CodeSnippet';
 import { PostCreator } from './components/PostCreator';
@@ -9,6 +9,8 @@ import { CookieConsent } from './components/CookieConsent';
 import { MessagingSystem } from './components/MessagingSystem';
 import { CommentSystem } from './components/CommentSystem';
 import { EngagementBar } from './components/EngagementBar';
+import { ResumeViewer } from './components/ResumeViewer';
+import { PostDeleteConfirmation } from './components/PostDeleteConfirmation';
 import { mockUsers, mockPosts } from './data/mockUsers';
 
 interface User {
@@ -56,6 +58,8 @@ function App() {
   const [showCreatePost, setShowCreatePost] = useState(false);
   const [showMessaging, setShowMessaging] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<number | null>(null);
+  const [showResumeViewer, setShowResumeViewer] = useState(false);
+  const [selectedResume, setSelectedResume] = useState<{ url?: string; file?: File; userName: string } | null>(null);
   const [expandedComments, setExpandedComments] = useState<Set<number>>(new Set());
   const [postCommentCounts, setPostCommentCounts] = useState<Record<number, number>>({});
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
@@ -131,9 +135,18 @@ function App() {
     });
   };
 
-  const handleDeletePost = (postId: number) => {
+  const handleDeletePost = async (postId: number) => {
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // In production, this would be an API call
+    // await deletePost(postId);
+    
     setPosts(posts.filter(post => post.id !== postId));
     setShowDeleteConfirm(null);
+    
+    // Show success feedback
+    // You could add a toast notification here
   };
 
   const handleLike = async (postId: number) => {
@@ -142,6 +155,16 @@ function App() {
         ? { ...post, likes_count: post.likes_count + 1 }
         : post
     ));
+  };
+
+  const handleViewResume = (documentUrl: string, userName: string) => {
+    setSelectedResume({ url: documentUrl, userName });
+    setShowResumeViewer(true);
+  };
+
+  const handleCloseResumeViewer = () => {
+    setShowResumeViewer(false);
+    setSelectedResume(null);
   };
 
   const logout = () => {
@@ -185,6 +208,18 @@ function App() {
       localStorage.setItem('user', JSON.stringify(updatedUser));
     }
   };
+
+  // Show Resume Viewer if active
+  if (showResumeViewer && selectedResume) {
+    return (
+      <ResumeViewer
+        resumeUrl={selectedResume.url}
+        resumeFile={selectedResume.file}
+        userName={selectedResume.userName}
+        onBack={handleCloseResumeViewer}
+      />
+    );
+  }
 
   if (showLogin) {
     return (
@@ -482,7 +517,7 @@ function App() {
                           className="p-2 text-gray-400 hover:text-red-500 rounded-lg hover:bg-red-50 transition-colors"
                           title="Delete post"
                         >
-                          <MoreHorizontal className="w-4 h-4" />
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
                     )}
@@ -523,11 +558,11 @@ function App() {
                                 <button
                                   onClick={() => {
                                     if (post.document_url) {
-                                      window.open(post.document_url, '_blank');
+                                      handleViewResume(post.document_url, post.full_name);
                                     }
                                   }}
                                   className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
-                                  title="Open in new tab"
+                                  title="View resume"
                                 >
                                   <Eye className="w-4 h-4" />
                                 </button>
@@ -584,7 +619,7 @@ function App() {
                                 <button
                                   onClick={() => {
                                     if (post.document_url) {
-                                      window.open(post.document_url, '_blank');
+                                      handleViewResume(post.document_url, post.full_name);
                                     }
                                   }}
                                   className="flex items-center space-x-1 text-indigo-600 hover:text-indigo-700"
@@ -713,6 +748,18 @@ function App() {
         <MessagingSystem
           currentUserId={user.id}
           onClose={() => setShowMessaging(false)}
+        />
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <PostDeleteConfirmation
+          postId={showDeleteConfirm}
+          postContent={posts.find(p => p.id === showDeleteConfirm)?.content || ''}
+          postAuthor={posts.find(p => p.id === showDeleteConfirm)?.full_name || ''}
+          onConfirm={handleDeletePost}
+          onCancel={() => setShowDeleteConfirm(null)}
+          isVisible={true}
         />
       )}
 
