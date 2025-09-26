@@ -229,7 +229,7 @@ function App() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 flex items-center justify-center p-4">
         <div className="max-w-md w-full space-y-8">
-          <div className="text-center">
+          <div className="text-center flex flex-col items-center">
             <Logo size="lg" className="justify-center mb-4" />
             <p className="text-gray-600">Connect with tech professionals worldwide</p>
           </div>
