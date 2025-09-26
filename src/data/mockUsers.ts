@@ -8,6 +8,16 @@ export interface User {
   skills?: string[];
   company?: string;
   job_title?: string;
+  onboarding_completed?: boolean;
+  is_owner?: boolean;
+  owner_permissions?: {
+    profile_management: boolean;
+    content_creation: boolean;
+    social_features: boolean;
+    community_interaction: boolean;
+    analytics_access: boolean;
+    advanced_settings: boolean;
+  };
   age_range?: string;
   personality_traits?: string[];
   interests?: string[];
@@ -24,6 +34,14 @@ export interface Post {
   code_language?: string;
   document_name?: string;
   document_url?: string;
+  url_preview?: {
+    url: string;
+    title: string;
+    description: string;
+    image?: string;
+    siteName?: string;
+    favicon?: string;
+  };
   created_at: string;
   likes_count: number;
   comments_count: number;
@@ -46,6 +64,8 @@ export const mockUsers: User[] = [
     skills: ['React', 'TypeScript', 'GraphQL', 'Node.js', 'Docker'],
     company: 'Meta',
     job_title: 'Senior Frontend Developer',
+    onboarding_completed: true,
+    is_owner: true,
     age_range: '28-32',
     personality_traits: ['analytical', 'collaborative', 'detail-oriented', 'curious'],
     interests: ['web development', 'mechanical keyboards', 'indie games', 'coffee brewing', 'open source'],
@@ -63,6 +83,8 @@ export const mockUsers: User[] = [
     skills: ['Python', 'Django', 'React', 'PostgreSQL', 'AWS'],
     company: 'Google',
     job_title: 'Full Stack Engineer',
+    onboarding_completed: true,
+    is_owner: true,
     age_range: '26-30',
     personality_traits: ['methodical', 'helpful', 'innovative', 'patient'],
     interests: ['data science', 'sci-fi literature', 'backend architecture', 'cloud computing', 'mentoring'],
@@ -80,6 +102,8 @@ export const mockUsers: User[] = [
     skills: ['Kubernetes', 'Docker', 'Terraform', 'Azure', 'Python', 'Bash'],
     company: 'Microsoft',
     job_title: 'DevOps Engineer',
+    onboarding_completed: true,
+    is_owner: true,
     age_range: '30-34',
     personality_traits: ['systematic', 'problem-solver', 'efficient', 'nostalgic'],
     interests: ['infrastructure automation', 'retro gaming', 'system optimization', 'cloud architecture'],
@@ -97,6 +121,8 @@ export const mockUsers: User[] = [
     skills: ['JavaScript', 'Python', 'Git', 'HTML/CSS', 'Unity'],
     company: 'TechStart Inc',
     job_title: 'Junior Software Developer',
+    onboarding_completed: false, // Will trigger onboarding
+    is_owner: false,
     age_range: '22-25',
     personality_traits: ['enthusiastic', 'curious', 'determined', 'creative'],
     interests: ['web development', 'game development', 'anime', 'learning new technologies', 'coding challenges'],
@@ -114,6 +140,8 @@ export const mockUsers: User[] = [
     skills: ['Python', 'TensorFlow', 'PyTorch', 'CUDA', 'OpenCV', 'Docker'],
     company: 'NVIDIA',
     job_title: 'AI/ML Engineer',
+    onboarding_completed: true,
+    is_owner: true,
     age_range: '32-36',
     personality_traits: ['intellectual', 'precise', 'innovative', 'articulate'],
     interests: ['machine learning', 'computer vision', 'photography', 'research papers', 'conference speaking'],
@@ -131,6 +159,8 @@ export const mockUsers: User[] = [
     skills: ['Cybersecurity', 'Penetration Testing', 'Python', 'Linux', 'Network Security'],
     company: 'Amazon',
     job_title: 'Security Engineer',
+    onboarding_completed: true,
+    is_owner: true,
     age_range: '29-33',
     personality_traits: ['vigilant', 'analytical', 'ethical', 'competitive'],
     interests: ['cybersecurity', 'CTF competitions', 'privacy rights', 'ethical hacking', 'security research'],
@@ -148,6 +178,8 @@ export const mockUsers: User[] = [
     skills: ['Swift', 'SwiftUI', 'iOS', 'Xcode', 'Core Data', 'UIKit'],
     company: 'Apple',
     job_title: 'iOS Developer',
+    onboarding_completed: true,
+    is_owner: true,
     age_range: '27-31',
     personality_traits: ['perfectionist', 'creative', 'user-focused', 'detail-oriented'],
     interests: ['iOS development', 'mobile UI/UX', 'indie app development', 'design patterns', 'Apple ecosystem'],
@@ -165,6 +197,8 @@ export const mockUsers: User[] = [
     skills: ['VHDL', 'Verilog', 'FPGA', 'Circuit Design', 'Python', 'MATLAB'],
     company: 'Intel',
     job_title: 'Hardware Engineer',
+    onboarding_completed: true,
+    is_owner: true,
     age_range: '31-35',
     personality_traits: ['logical', 'hands-on', 'innovative', 'methodical'],
     interests: ['hardware design', 'robotics', 'maker projects', 'embedded systems', 'IoT'],
@@ -540,5 +574,28 @@ spec:
     company: 'Intel',
     image_description: 'Microscopic view of semiconductor transistors with scale comparisons and infographic showing the incredible miniaturization of modern chips',
     image_type: 'artwork'
+  },
+
+  // URL Preview Example Post
+  {
+    id: 18,
+    user_id: 2,
+    content: "Just discovered this amazing resource for learning React! The interactive tutorials are fantastic and really help solidify the concepts. Highly recommend checking it out! 🚀",
+    post_type: 'url',
+    url_preview: {
+      url: 'https://react.dev',
+      title: 'React - The library for web and native user interfaces',
+      description: 'React lets you build user interfaces out of individual pieces called components. Create your own React components like Thumbnail, LikeButton, and Video.',
+      image: 'https://images.pexels.com/photos/11035471/pexels-photo-11035471.jpeg?auto=compress&cs=tinysrgb&w=400&h=200&fit=crop',
+      siteName: 'React',
+      favicon: '⚛️'
+    },
+    created_at: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
+    likes_count: 45,
+    comments_count: 12,
+    full_name: 'Sarah Johnson',
+    profile_picture: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
+    job_title: 'Full Stack Engineer',
+    company: 'Google'
   }
 ];

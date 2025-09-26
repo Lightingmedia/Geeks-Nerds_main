@@ -77,7 +77,7 @@ export const Footer: React.FC = () => {
               </h4>
               <div className="text-sm text-gray-300 space-y-2">
                 <p><strong>Geeks & Nerds Inc.</strong></p>
-                <p>123 Tech Valley Drive<br />San Francisco, CA 94105<br />United States</p>
+                <p>Tech Valley Drive<br /> Antioch, CA 94105<br />United States</p>
                 <p>
                   <strong>DPO Contact:</strong><br />
                   <a href="mailto:privacy@geeksandnerds.com" className="text-indigo-400 hover:text-indigo-300">

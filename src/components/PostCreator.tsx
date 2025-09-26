@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { X, Code, FileText, Image, Folder, FolderOpen } from 'lucide-react';
+import { X, Code, FileText, Image, Folder, FolderOpen, Link } from 'lucide-react';
 import { PDFUpload } from './PDFUpload';
+import { URLEmbedder } from './URLEmbedder';
 
 interface PostCreatorProps {
   onClose: () => void;
@@ -15,11 +16,24 @@ interface PDFFile {
   size: string;
 }
 
+interface URLPreview {
+  url: string;
+  title: string;
+  description: string;
+  image?: string;
+  siteName?: string;
+  favicon?: string;
+  isValid: boolean;
+  error?: string;
+}
+
 export const PostCreator: React.FC<PostCreatorProps> = ({ onClose, onSubmit, user }) => {
-  const [activeTab, setActiveTab] = useState<'text' | 'code' | 'photo' | 'document'>('text');
+  const [activeTab, setActiveTab] = useState<'text' | 'code' | 'photo' | 'document' | 'url'>('text');
   const [content, setContent] = useState('');
   const [codeLanguage, setCodeLanguage] = useState('javascript');
   const [selectedPDF, setSelectedPDF] = useState<PDFFile | null>(null);
+  const [urlPreview, setUrlPreview] = useState<URLPreview | null>(null);
+  const [showURLEmbedder, setShowURLEmbedder] = useState(false);
 
   const formatFileSize = (bytes: number): string => {
     if (bytes === 0) return '0 Bytes';
@@ -39,6 +53,15 @@ export const PostCreator: React.FC<PostCreatorProps> = ({ onClose, onSubmit, use
     });
   };
 
+  const handleURLEmbed = (preview: URLPreview) => {
+    setUrlPreview(preview);
+    setShowURLEmbedder(false);
+  };
+
+  const handleURLRemove = () => {
+    setUrlPreview(null);
+  };
+
   const handlePDFRemove = () => {
     if (selectedPDF) {
       URL.revokeObjectURL(selectedPDF.preview);
@@ -49,7 +72,7 @@ export const PostCreator: React.FC<PostCreatorProps> = ({ onClose, onSubmit, use
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!content.trim() && !selectedPDF) return;
+    if (!content.trim() && !selectedPDF && !urlPreview) return;
 
     const post = {
       id: Date.now(),
@@ -59,6 +82,7 @@ export const PostCreator: React.FC<PostCreatorProps> = ({ onClose, onSubmit, use
       code_language: activeTab === 'code' ? codeLanguage : undefined,
       document_name: selectedPDF?.name || undefined,
       document_url: selectedPDF ? URL.createObjectURL(selectedPDF.file) : undefined,
+      url_preview: urlPreview || undefined,
       created_at: new Date().toISOString(),
       likes_count: 0,
       comments_count: 0,
@@ -78,7 +102,8 @@ export const PostCreator: React.FC<PostCreatorProps> = ({ onClose, onSubmit, use
     { id: 'text', label: 'Text', icon: FileText, color: 'text-gray-600' },
     { id: 'code', label: 'Code', icon: Code, color: 'text-green-600' },
     { id: 'photo', label: 'Project', icon: Image, color: 'text-purple-600' },
-    { id: 'document', label: 'Document', icon: FolderOpen, color: 'text-orange-600' }
+    { id: 'document', label: 'Document', icon: FolderOpen, color: 'text-orange-600' },
+    { id: 'url', label: 'Website', icon: Link, color: 'text-blue-600' }
   ];
 
   return (
@@ -172,6 +197,88 @@ export const PostCreator: React.FC<PostCreatorProps> = ({ onClose, onSubmit, use
                 </div>
               )}
             </div>
+          ) : activeTab === 'url' ? (
+            <div className="space-y-4">
+              {!urlPreview && !showURLEmbedder && (
+                <div className="text-center py-8">
+                  <Link className="w-12 h-12 text-blue-600 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Share a Website</h3>
+                  <p className="text-gray-600 mb-4">
+                    Embed any website URL to showcase projects, articles, or resources
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setShowURLEmbedder(true)}
+                    className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    Add Website URL
+                  </button>
+                </div>
+              )}
+              
+              {showURLEmbedder && (
+                <URLEmbedder
+                  onEmbed={handleURLEmbed}
+                  onCancel={() => setShowURLEmbedder(false)}
+                />
+              )}
+              
+              {urlPreview && (
+                <div className="space-y-4">
+                  <div className="border border-gray-200 rounded-lg overflow-hidden">
+                    {urlPreview.image && (
+                      <div className="relative h-48 bg-gray-100">
+                        <img
+                          src={urlPreview.image}
+                          alt={urlPreview.title}
+                          className="w-full h-full object-cover"
+                        />
+                        <button
+                          type="button"
+                          onClick={handleURLRemove}
+                          className="absolute top-2 right-2 p-1 bg-black bg-opacity-75 text-white rounded-full hover:bg-opacity-90 transition-colors"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    )}
+                    <div className="p-4">
+                      <div className="flex items-start space-x-3">
+                        <div className="flex-shrink-0">
+                          <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-lg">
+                            {urlPreview.favicon || '🌐'}
+                          </div>
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-gray-900 mb-1">
+                            {urlPreview.title}
+                          </h4>
+                          <p className="text-sm text-gray-600 mb-2">
+                            {urlPreview.description}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {urlPreview.siteName} • {new URL(urlPreview.url).hostname}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Add a description (optional)
+                    </label>
+                    <textarea
+                      value={content}
+                      onChange={(e) => setContent(e.target.value)}
+                      placeholder="Tell us about this website..."
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+                      rows={3}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
           ) : (
             <div>
               <textarea
@@ -202,10 +309,14 @@ export const PostCreator: React.FC<PostCreatorProps> = ({ onClose, onSubmit, use
             </button>
             <button
               type="submit"
-              disabled={!content.trim() && !selectedPDF}
+              disabled={!content.trim() && !selectedPDF && !urlPreview}
               className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
             >
-              {activeTab === 'document' && selectedPDF ? 'Share Document' : 'Share Post'}
+              {activeTab === 'document' && selectedPDF 
+                ? 'Share Document' 
+                : activeTab === 'url' && urlPreview 
+                ? 'Share Website' 
+                : 'Share Post'}
             </button>
           </div>
         </form>

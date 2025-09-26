@@ -3,6 +3,7 @@ import { User, Upload, Plus, X, Search, Bell, Settings, FileText, Eye, Mail, Tra
 import { Logo } from './components/Logo';
 import { CodeSnippet } from './components/CodeSnippet';
 import { PostCreator } from './components/PostCreator';
+import { OnboardingFlow } from './components/OnboardingFlow';
 import { Footer } from './components/Footer';
 import { CookieConsent } from './components/CookieConsent';
 import { MessagingSystem } from './components/MessagingSystem';
@@ -29,6 +30,14 @@ interface Post {
   post_type: string;
   code_language?: string;
   document_name?: string;
+  url_preview?: {
+    url: string;
+    title: string;
+    description: string;
+    image?: string;
+    siteName?: string;
+    favicon?: string;
+  };
   created_at: string;
   likes_count: number;
   comments_count: number;
@@ -42,6 +51,7 @@ function App() {
   const [user, setUser] = useState<User | null>(null);
   const [posts, setPosts] = useState<Post[]>(mockPosts);
   const [loading, setLoading] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [showLogin, setShowLogin] = useState(true);
   const [showCreatePost, setShowCreatePost] = useState(false);
   const [showMessaging, setShowMessaging] = useState(false);
@@ -66,6 +76,12 @@ function App() {
     if (foundUser && loginForm.password === 'geek123') {
       setUser(foundUser);
       setShowLogin(false);
+      
+      // Show onboarding for new users
+      if (!foundUser.onboarding_completed) {
+        setShowOnboarding(true);
+      }
+      
       localStorage.setItem('user', JSON.stringify(foundUser));
     } else {
       alert('Invalid credentials. Try any email from the demo list with password: geek123');
@@ -91,6 +107,7 @@ function App() {
     setUser(newUser);
     setShowLogin(false);
     setShowRegister(false);
+    setShowOnboarding(true); // Always show onboarding for new registrations
     localStorage.setItem('user', JSON.stringify(newUser));
   };
 
@@ -149,10 +166,25 @@ function App() {
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      const userData = JSON.parse(storedUser);
+      setUser(userData);
       setShowLogin(false);
+      
+      // Check if onboarding is needed
+      if (!userData.onboarding_completed) {
+        setShowOnboarding(true);
+      }
     }
   }, []);
+
+  const handleOnboardingComplete = () => {
+    setShowOnboarding(false);
+    if (user) {
+      const updatedUser = { ...user, onboarding_completed: true };
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+    }
+  };
 
   if (showLogin) {
     return (
@@ -322,7 +354,6 @@ function App() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-8">
               <Logo size="md" />
-              <h1 className="text-2xl font-bold text-gray-900">Geeks & Nerds</h1>
               <nav className="flex space-x-6">
                 <a href="#" className="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md font-medium bg-indigo-50">
                   Feed
@@ -566,6 +597,61 @@ function App() {
                           </div>
                         )}
                       </div>
+                    ) : post.url_preview ? (
+                      <div className="space-y-4">
+                        {post.content && (
+                          <p className="text-gray-900 whitespace-pre-wrap leading-relaxed">{post.content}</p>
+                        )}
+                        <div className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                          {post.url_preview.image && (
+                            <div className="relative h-48 bg-gray-100">
+                              <img
+                                src={post.url_preview.image}
+                                alt={post.url_preview.title}
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  const target = e.target as HTMLImageElement;
+                                  target.style.display = 'none';
+                                }}
+                              />
+                              <div className="absolute top-2 right-2">
+                                <span className="bg-black bg-opacity-75 text-white text-xs px-2 py-1 rounded">
+                                  Website
+                                </span>
+                              </div>
+                            </div>
+                          )}
+                          <div className="p-4">
+                            <div className="flex items-start space-x-3">
+                              <div className="flex-shrink-0">
+                                <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-lg">
+                                  {post.url_preview.favicon || '🌐'}
+                                </div>
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <h4 className="font-semibold text-gray-900 line-clamp-2 mb-1">
+                                  {post.url_preview.title}
+                                </h4>
+                                <p className="text-sm text-gray-600 line-clamp-3 mb-2">
+                                  {post.url_preview.description}
+                                </p>
+                                <div className="flex items-center space-x-2 text-xs text-gray-500">
+                                  <span>{post.url_preview.siteName}</span>
+                                  <span>•</span>
+                                  <span className="truncate">{new URL(post.url_preview.url).hostname}</span>
+                                </div>
+                              </div>
+                              <button
+                                onClick={() => window.open(post.url_preview!.url, '_blank')}
+                                className="p-2 text-gray-400 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors"
+                                title="Visit website"
+                              >
+                                <ExternalLink className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     ) : (
                       <p className="text-gray-900 whitespace-pre-wrap leading-relaxed">{post.content}</p>
                     )}
@@ -603,6 +689,15 @@ function App() {
 
       {/* Cookie Consent */}
       <CookieConsent />
+
+      {/* Onboarding Flow */}
+      {showOnboarding && user && (
+        <OnboardingFlow
+          user={user}
+          onComplete={handleOnboardingComplete}
+          onSkip={handleOnboardingComplete}
+        />
+      )}
 
       {/* Create Post Modal */}
       {showCreatePost && (
