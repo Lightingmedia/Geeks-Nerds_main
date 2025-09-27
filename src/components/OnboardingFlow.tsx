@@ -74,14 +74,6 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ user, onComplete
       ...user,
       is_owner: true,
       onboarding_completed: true,
-      owner_permissions: {
-        profile_management: true,
-        content_creation: true,
-        social_features: true,
-        community_interaction: true,
-        analytics_access: true,
-        advanced_settings: true
-      }
     };
     
     localStorage.setItem('user', JSON.stringify(updatedUser));
@@ -139,9 +131,9 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ user, onComplete
               <div className="flex items-center space-x-3">
                 <CheckCircle className="w-6 h-6 text-green-600" />
                 <div>
-                  <h4 className="font-semibold text-green-800">Owner Status Granted!</h4>
+                  <h4 className="font-semibold text-green-800">Welcome to the Community!</h4>
                   <p className="text-green-700 text-sm">
-                    You now have full access to all platform features and can manage your content freely.
+                    You now have access to all platform features and can connect with other developers.
                   </p>
                 </div>
               </div>
@@ -228,7 +220,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ user, onComplete
 
         {/* Features Overview */}
         <div className="bg-gray-50 p-6 border-t">
-          <h4 className="font-semibold text-gray-900 mb-3">Your Owner Privileges Include:</h4>
+          <h4 className="font-semibold text-gray-900 mb-3">Your Platform Features Include:</h4>
           <div className="grid grid-cols-2 gap-3 text-sm">
             <div className="flex items-center space-x-2">
               <CheckCircle className="w-4 h-4 text-green-600" />
@@ -236,15 +228,15 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ user, onComplete
             </div>
             <div className="flex items-center space-x-2">
               <CheckCircle className="w-4 h-4 text-green-600" />
-              <span>Unlimited content creation</span>
+              <span>Content creation and sharing</span>
             </div>
             <div className="flex items-center space-x-2">
               <CheckCircle className="w-4 h-4 text-green-600" />
-              <span>Advanced social features</span>
+              <span>Social networking features</span>
             </div>
             <div className="flex items-center space-x-2">
               <CheckCircle className="w-4 h-4 text-green-600" />
-              <span>Analytics dashboard</span>
+              <span>Community interaction</span>
             </div>
           </div>
         </div>

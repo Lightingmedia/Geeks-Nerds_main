@@ -13,7 +13,7 @@ import { ResumeViewer } from './components/ResumeViewer';
 import { PostDeleteConfirmation } from './components/PostDeleteConfirmation';
 import { RSSFeedManager } from './components/RSSFeedManager';
 import { ProfileSettings } from './components/ProfileSettings';
-import { mockUsers, mockPosts } from './data/mockUsers';
+import { mockUsers, mockPosts, systemUsers, signedUpUsers } from './data/mockUsers';
 
 interface User {
   id: number;
@@ -103,7 +103,7 @@ function App() {
     
     // Mock registration
     const newUser = {
-      id: Date.now(),
+      id: Date.now(), // Use timestamp to avoid conflicts with system users
       email: registerForm.email,
       full_name: registerForm.fullName,
       profile_picture: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
@@ -111,8 +111,12 @@ function App() {
       location: 'Remote',
       skills: [],
       company: registerForm.company,
-      job_title: registerForm.jobTitle
+      job_title: registerForm.jobTitle,
+      is_signed_up_user: true // Mark as signed up user
     };
+    
+    // Add to signed up users array
+    signedUpUsers.push(newUser);
     
     setUser(newUser);
     setShowLogin(false);

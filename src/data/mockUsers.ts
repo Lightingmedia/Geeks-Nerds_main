@@ -72,23 +72,15 @@ export const superAdmin: User = {
   email: 'bola.olatunji@gmail.com',
   full_name: 'Bola Olatunji',
   profile_picture: 'https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
-  bio: 'Passionate about building communities that connect tech professionals worldwide. Love working on innovative projects and helping others grow in their careers.',
+  bio: 'Senior Full Stack Developer with expertise in React, Node.js, and cloud technologies. Passionate about building scalable applications and mentoring junior developers.',
   location: 'Global',
   skills: ['Full Stack Development', 'Community Building', 'Tech Leadership', 'JavaScript', 'React'],
   company: 'Tech Innovations',
   job_title: 'Senior Full Stack Developer',
   onboarding_completed: true,
-  is_owner: true,
+  is_owner: false,
   is_admin: true,
   is_super_admin: true,
-  owner_permissions: {
-    profile_management: true,
-    content_creation: true,
-    social_features: true,
-    community_interaction: true,
-    analytics_access: true,
-    advanced_settings: true
-  },
   admin_permissions: {
     user_management: true,
     content_moderation: true,
@@ -97,16 +89,15 @@ export const superAdmin: User = {
     analytics_dashboard: true
   },
   age_range: '30-35',
-  personality_traits: ['visionary', 'collaborative', 'strategic', 'innovative'],
-  interests: ['platform development', 'community building', 'tech innovation', 'user experience', 'data analytics'],
-  communication_style: 'strategic and inspiring, focuses on community growth and platform vision',
+  personality_traits: ['analytical', 'collaborative', 'problem-solver', 'innovative'],
+  interests: ['full stack development', 'cloud architecture', 'tech innovation', 'mentoring', 'open source'],
+  communication_style: 'technical and helpful, focuses on code quality and best practices',
   expertise_level: 'expert',
-  preferred_content: ['platform updates', 'community insights', 'tech industry trends', 'leadership content']
+  preferred_content: ['technical tutorials', 'architecture discussions', 'development best practices', 'mentoring content']
 };
 
-// Mock users based on university/college contacts (development-safe fictional users)
-export const mockUsers: User[] = [
-  superAdmin,
+// Pre-added system users (fictional users added by the system)
+export const systemUsers: User[] = [
   {
     id: 2,
     email: 'sarah.tech@university.edu',
@@ -232,7 +223,7 @@ export const mockUsers: User[] = [
     company: 'SmartCity Technologies',
     job_title: 'Embedded Systems Engineer',
     onboarding_completed: true,
-    is_owner: true,
+    is_owner: false,
     age_range: '27-31',
     personality_traits: ['hands-on', 'systematic', 'innovative', 'problem-solver'],
     interests: ['embedded systems', 'IoT', 'smart cities', 'hardware design', 'maker projects'],
@@ -242,42 +233,16 @@ export const mockUsers: User[] = [
   }
 ];
 
-// RSS-generated sample posts
-export const rssGeneratedPosts: Post[] = [
-  {
-    id: 1001,
-    user_id: 1, // Super Admin
-    content: "🚀 **Tech Industry Update**: Major breakthrough in quantum computing as Google announces new quantum processor with 70% error reduction. This could revolutionize cryptography and complex problem-solving in the next decade.\n\n#QuantumComputing #TechNews #Innovation",
-    post_type: 'text',
-    created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-    likes_count: 45,
-    comments_count: 12,
-    full_name: 'Bola Olatunji',
-    profile_picture: 'https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
-    job_title: 'Super Administrator & Platform Owner',
-    company: 'Geeks & Nerds',
-    is_rss_generated: true,
-    rss_source: 'TechCrunch'
-  },
-  {
-    id: 1002,
-    user_id: 1,
-    content: "📊 **Developer Survey Results**: Stack Overflow's 2024 survey reveals JavaScript remains the most popular language, but Rust shows the highest satisfaction rate among developers.\n\nKey findings:\n• 68% of developers use JavaScript\n• Rust has 87% satisfaction rate\n• Remote work preference increased to 85%\n• AI tools adoption at 76%\n\n#DeveloperSurvey #Programming #TechTrends",
-    post_type: 'text',
-    created_at: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
-    likes_count: 67,
-    comments_count: 23,
-    full_name: 'Bola Olatunji',
-    profile_picture: 'https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
-    job_title: 'Super Administrator & Platform Owner',
-    company: 'Geeks & Nerds',
-    is_rss_generated: true,
-    rss_source: 'Stack Overflow Blog'
-  }
+// All mock users (system users + super admin)
+export const mockUsers: User[] = [
+  superAdmin,
+  ...systemUsers
 ];
 
+// Signed up users (users who registered through the app)
+export const signedUpUsers: User[] = [];
+
 export const mockPosts: Post[] = [
-  ...rssGeneratedPosts,
   // User-generated posts
   {
     id: 101,
