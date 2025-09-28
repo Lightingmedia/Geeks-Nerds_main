@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Share2, Facebook, Twitter, Linkedin, Link, Copy, Check, Mail, MessageSquare } from 'lucide-react';
+import { trackSocialShare } from '../utils/gtm';
 
 interface SocialSharingProps {
   url: string;
@@ -62,14 +63,8 @@ export const SocialSharing: React.FC<SocialSharingProps> = ({
       return;
     }
 
-    // Google Analytics event tracking
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', 'share', {
-        event_category: 'engagement',
-        event_label: platform,
-        value: 1
-      });
-    }
+    // Track social sharing via GTM
+    trackSocialShare(platform, 'post', url);
 
     // Increment share count
     setShareCount(prev => prev + 1);

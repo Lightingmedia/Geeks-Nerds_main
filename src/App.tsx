@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { User, Upload, Plus, X, Search, Bell, Settings, FileText, Eye, Mail, Trash2, MoreHorizontal, ExternalLink, ArrowLeft, Rss } from 'lucide-react';
+import { initializeGTM, trackPageView, trackAuth, trackPostInteraction } from './utils/gtm';
 import { Logo } from './components/Logo';
 import { CodeSnippet } from './components/CodeSnippet';
 import { PostCreator } from './components/PostCreator';
@@ -78,6 +79,12 @@ function App() {
   });
   const [showRegister, setShowRegister] = useState(false);
 
+  // Initialize GTM on component mount
+  useEffect(() => {
+    initializeGTM();
+    trackPageView('/', 'Geeks & Nerds - Home');
+  }, []);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -86,6 +93,9 @@ function App() {
     if (foundUser && loginForm.password === 'geek123') {
       setUser(foundUser);
       setShowLogin(false);
+      
+      // Track login event
+      trackAuth('login', foundUser.id.toString());
       
       // Show onboarding for new users
       if (!foundUser.onboarding_completed) {
@@ -121,11 +131,18 @@ function App() {
     setUser(newUser);
     setShowLogin(false);
     setShowRegister(false);
+    
+    // Track registration event
+    trackAuth('register', newUser.id.toString());
+    
     setShowOnboarding(true); // Always show onboarding for new registrations
     localStorage.setItem('user', JSON.stringify(newUser));
   };
 
   const handleCreatePost = (post: Post) => {
+    // Track post creation
+    trackPostInteraction('create', post.id.toString(), post.post_type, user?.id.toString());
+    
     setPosts([post, ...posts]);
   };
 
@@ -160,6 +177,9 @@ function App() {
   };
 
   const handleLike = async (postId: number) => {
+    // Track like interaction
+    trackPostInteraction('like', postId.toString(), 'like', user?.id.toString());
+    
     setPosts(posts.map(post => 
       post.id === postId 
         ? { ...post, likes_count: post.likes_count + 1 }
@@ -178,6 +198,11 @@ function App() {
   };
 
   const logout = () => {
+    // Track logout event
+    if (user) {
+      trackAuth('logout', user.id.toString());
+    }
+    
     setUser(null);
     setShowLogin(true);
     setPosts(mockPosts);

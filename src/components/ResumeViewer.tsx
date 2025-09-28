@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Download, ExternalLink, FileText, AlertCircle, Loader, Eye, ZoomIn, ZoomOut, RefreshCw, Wifi, WifiOff } from 'lucide-react';
+import { trackFileAction } from '../utils/gtm';
 
 interface ResumeViewerProps {
   resumeUrl?: string;
@@ -137,6 +138,9 @@ export const ResumeViewer: React.FC<ResumeViewerProps> = ({
   const handleDownload = () => {
     if (!documentUrl) return;
 
+    // Track download via GTM
+    trackFileAction('download', documentType, selectedResume?.file?.name || 'resume.pdf', selectedResume?.file?.size);
+
     const link = document.createElement('a');
     link.href = documentUrl;
     link.download = resumeFile?.name || `${userName}_Resume.pdf`;
@@ -144,17 +148,12 @@ export const ResumeViewer: React.FC<ResumeViewerProps> = ({
     link.click();
     document.body.removeChild(link);
 
-    // Analytics tracking
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', 'resume_download', {
-        event_category: 'engagement',
-        event_label: 'download_resume',
-        value: 1
-      });
-    }
   };
 
   const handleOpenInNewTab = () => {
+    // Track file view via GTM
+    trackFileAction('view', documentType, selectedResume?.file?.name || 'resume.pdf');
+    
     if (documentUrl) {
       window.open(documentUrl, '_blank');
     }

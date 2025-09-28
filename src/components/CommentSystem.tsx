@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MessageCircle, Heart, Reply, Flag, MoreHorizontal, Trash2, CreditCard as Edit3, Check, X } from 'lucide-react';
+import { trackPostInteraction, trackEngagement } from '../utils/gtm';
 
 interface Comment {
   id: number;
@@ -117,14 +118,8 @@ export const CommentSystem: React.FC<CommentSystemProps> = ({
 
     setLoading(true);
     
-    // Google Analytics event tracking
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', 'comment_post', {
-        event_category: 'engagement',
-        event_label: 'new_comment',
-        value: 1
-      });
-    }
+    // Track comment creation via GTM
+    trackPostInteraction('comment', postId.toString(), 'comment', currentUser?.id.toString());
 
     const comment: Comment = {
       id: Date.now(),
@@ -155,14 +150,8 @@ export const CommentSystem: React.FC<CommentSystemProps> = ({
   const handleSubmitReply = async (parentId: number) => {
     if (!replyContent.trim() || !currentUser) return;
 
-    // Google Analytics event tracking
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', 'comment_reply', {
-        event_category: 'engagement',
-        event_label: 'reply_to_comment',
-        value: 1
-      });
-    }
+    // Track reply via GTM
+    trackEngagement('reply', 'comment', 'comment_reply', 1);
 
     const reply: Comment = {
       id: Date.now(),
@@ -194,14 +183,8 @@ export const CommentSystem: React.FC<CommentSystemProps> = ({
   };
 
   const handleLikeComment = async (commentId: number, isReply: boolean = false, parentId?: number) => {
-    // Google Analytics event tracking
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', 'comment_like', {
-        event_category: 'engagement',
-        event_label: isReply ? 'like_reply' : 'like_comment',
-        value: 1
-      });
-    }
+    // Track comment like via GTM
+    trackEngagement('like', 'comment', isReply ? 'like_reply' : 'like_comment', 1);
 
     if (isReply && parentId) {
       setComments(comments.map(comment => 
