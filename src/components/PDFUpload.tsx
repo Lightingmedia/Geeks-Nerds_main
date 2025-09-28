@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { Upload, FileText, X, Eye } from 'lucide-react';
 import { PdfViewer } from './PdfViewer';
 
@@ -18,21 +18,7 @@ interface PDFUploadProps {
 export const PDFUpload: React.FC<PDFUploadProps> = ({ onFileSelect, onRemove, selectedFile }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
-  const [modalPdfUrl, setModalPdfUrl] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (isPreviewOpen && selectedFile) {
-      const url = URL.createObjectURL(selectedFile.file);
-      setModalPdfUrl(url);
-
-      return () => {
-        URL.revokeObjectURL(url);
-      };
-    } else {
-      setModalPdfUrl('');
-    }
-  }, [isPreviewOpen, selectedFile]);
 
   const formatFileSize = (bytes: number): string => {
     if (bytes === 0) return '0 Bytes';
@@ -90,7 +76,7 @@ export const PDFUpload: React.FC<PDFUploadProps> = ({ onFileSelect, onRemove, se
               </div>
               <div>
                 <p className="font-medium text-gray-900 truncate max-w-xs">{selectedFile.name}</p>
-                <p className="text-sm text-gray-500">{formatFileSize(selectedFile.file.size)}</p>
+                <p className="text-sm text-gray-500">{selectedFile.size}</p>
               </div>
             </div>
             <div className="flex items-center space-x-2">
@@ -134,14 +120,19 @@ export const PDFUpload: React.FC<PDFUploadProps> = ({ onFileSelect, onRemove, se
                 </button>
               </div>
               <div className="h-[calc(95vh-80px)]">
-                {modalPdfUrl && (
-                  <iframe
-                    src={modalPdfUrl}
-                    className="w-full h-full border-0"
-                    title="PDF Preview"
-                  />
-                )}
+                <iframe
+                  src={URL.createObjectURL(selectedFile.file)}
+                  className="w-full h-full border-0"
+                  title="PDF Preview"
+                />
               </div>
+            </div>
+            <div className="h-64 overflow-hidden">
+              <iframe
+                src={URL.createObjectURL(selectedFile.file)}
+                className="w-full h-full border-0"
+                title="PDF Preview"
+              />
             </div>
           </div>
         )}
